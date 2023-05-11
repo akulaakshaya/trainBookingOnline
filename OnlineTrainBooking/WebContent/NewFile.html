@@ -1,0 +1,89 @@
+<html>  
+<head>  
+<script>  
+window.onload = function(){
+	con();
+	sendInfo();
+}
+var request;
+function con(){
+	if(window.XMLHttpRequest){  
+		request=new XMLHttpRequest();  
+		}  
+		else if(window.ActiveXObject){  
+		request=new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+}
+
+function sendInfo()  
+{  
+var url="trainBooking.jsp"; 
+try  
+{  
+request.onreadystatechange=getInfo;  
+request.open("POST",url,true); 
+request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+request.send();  
+}  
+catch(e)  
+{  
+alert("Unable to connect to server");  
+}  
+}  
+ 
+function getInfo(){  
+if(request.readyState==4){  
+var val=request.responseText;  
+var loc=val.split("end");
+document.getElementById('to').innerHTML=loc[0];  
+document.getElementById('from').innerHTML=loc[1];  
+}  
+} 
+
+
+ function display(){
+	 
+	 var url="findTrains.jsp"; 
+	 var x=document.getElementById('to').value;
+	 	var y=document.getElementById('from').value;
+	 try  
+	 {  
+	 request.onreadystatechange=getTrains;
+	 request.open("POST",url,true); 
+	 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	 request.send("to="+x+"&from="+y);  
+	 }  
+	 catch(e)  
+	 {  
+	 alert("Unable to connect to server");  
+	 }  
+ }
+ function getTrains(){
+	 if(request.readyState==4){  
+		 var val=request.responseText;  
+		 document.getElementById("trains").innerHTML=val;
+	 }
+ }
+</script>  
+</head>  
+<body>      
+ START: <select id="to"> </select>  DESTINATION: <select id="from"> </select>
+ <button onclick="display()">Find Trains</button>
+ TRAINS: <select id="trains"> </select>
+ DATE:<input type="date">
+ Passenger Details:<br>
+<table>
+<tr><td>
+</td></tr>
+</table>
+Name: <input type="text">
+ Age :<input type="number">
+ 
+ 
+
+
+
+  
+  
+</body>  
+</html>  
