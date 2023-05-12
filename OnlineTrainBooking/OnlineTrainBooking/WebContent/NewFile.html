@@ -1,0 +1,140 @@
+<html>  
+<head>  
+<script>  
+window.onload = function(){
+	con();
+	sendInfo();
+}
+var request;
+function con(){
+	if(window.XMLHttpRequest){  
+		request=new XMLHttpRequest();  
+		}  
+		else if(window.ActiveXObject){  
+		request=new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+}
+
+function sendInfo()  
+{  
+var url="toFromServlet"; 
+try  
+{  
+request.onreadystatechange=getInfo;  
+request.open("POST",url,true); 
+request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+request.send();  
+}  
+catch(e)  
+{  
+alert("Unable to connect to server");  
+}  
+}  
+ 
+function getInfo(){  
+if(request.readyState==4){  
+var val=request.responseText;  
+var loc=val.split("end");
+document.getElementById('to').innerHTML=loc[0];  
+document.getElementById('from').innerHTML=loc[1];  
+}  
+} 
+
+
+ function display(){
+	 
+	 var url="findTrainsServlet"; 
+	 var x=document.getElementById('to').value;
+	 	var y=document.getElementById('from').value;
+	 try  
+	 {  
+	 request.onreadystatechange=getTrains;
+	 request.open("POST",url,true); 
+	 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	 request.send("to="+x+"&from="+y);  
+	 }  
+	 catch(e)  
+	 {  
+	 alert("Unable to connect to server");  
+	 }  
+ }
+ function getTrains(){
+	 if(request.readyState==4){  
+		 var val=request.responseText;  
+		 document.getElementById("trains").innerHTML=val;
+	 }
+ }
+ 
+	 function collectDetails(){
+			var names = "";
+			var ages = "";
+			var genders = "";
+			var toStation=document.getElementById('to').value;
+			var fromStation=document.getElementById('from').value;
+			var i;
+			for (i = 1; i < 6; i++) {
+				names += document.getElementById("name" + i).value + ",";
+				ages += document.getElementById("age" + i).value + ",";
+				genders += document.getElementById("gender" + i).value + ",";
+			}
+		}
+
+ 
+ 
+</script>  
+</head>  
+<body>     
+
+ START: <select id="to"> </select>  DESTINATION: <select id="from"> </select>
+ <button onclick="display()">Find Trains</button>
+ TRAINS: <select id="trains"> </select>
+ DATE:<input type="date"><br>
+ Passenger Details:<br>
+ 
+ <form action="preview.html" method="POST"> 
+ <input>
+  <input>
+   <input>
+    <input>
+    
+    
+ <table>
+<tr>
+<td >NAME</td>
+<td>AGE</td>
+<td>GENDER</td></tr>
+
+<td><input id="name1" type="text"></td>
+<td><input id="age1" type="number"></td>
+<td><select id="gender1" ><option>MALE</option>
+<option>FEMALE</option></select></td></tr>
+
+<td><input id="name2" type="text"></td>
+<td><input id="age2" type="number"></td>
+<td><select id="gender2"><option>MALE</option>
+<option>FEMALE</option></select>
+
+</td></tr>
+
+<td><input id="name3" type="text"></td>
+<td><input id="age3" type="number"></td>
+<td><select id="gender3"><option>MALE</option>
+<option>FEMALE</option></select></td></tr>
+
+<td><input id="name4" type="text"></td>
+<td><input  id="age4" type="number"></td>
+<td><select id="gender4"><option>MALE</option>
+<option>FEMALE</option></select></td></tr>
+
+
+<td><input id="name5" type="text"></td>
+<td><input id="age5" type="number"></td>
+<td><select id="gender5"><option>MALE</option>
+<option>FEMALE</option></select></td></tr>
+</table>
+<button onclick="collectDetails()">BOOK</button>
+</form>
+ 
+
+</body>  
+</html>  
