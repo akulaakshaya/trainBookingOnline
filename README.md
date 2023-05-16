@@ -1,5 +1,24 @@
 # trainBookingOnline
 
+create or replace procedure trainFare(tos varchar(15),froms varchar(20),tno int,cls varchar(20))
+as $$ 
+declare
+dist numeric(5,2);
+rate numeric(5,2);
+surcharge numeric(5,2);
+clsFare numeric(5,2);
+finalFare numeric(5,2);
+begin
+clsFare:=(select far_farefactor from gv_traintravelclasses where trn_travelclass=cls and trn_no=tno);
+dist:=(select std_distance from gv_train_distances where fst_code=tos and tst_code=froms);
+rate:=(select max(far_basefare) from gv_trainfares where far_distance<=dist );
+surcharge:=(select trn_surcharge from gv_trains where trn_no=tno);
+finalFare:=(rate*clsFare)+surcharge;
+raise notice '%',finalFare;
+end $$ language plpgsql;
+call trainFare('VSKP','SCND',12728,'SLP');
+
+
 
 create table ak_stn( stn_code char(10) not null,  stn_name varchar(100), primary key(stn_code))
 drop table ak_stn;
