@@ -1,0 +1,189 @@
+<html>
+
+
+<head>  
+<script>  
+window.onload = function(){
+	con();
+	sendInfo();
+}
+var request;
+function con(){
+	if(window.XMLHttpRequest){  
+		request=new XMLHttpRequest();  
+		}  
+		else if(window.ActiveXObject){  
+		request=new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+}
+
+function sendInfo()  
+{  
+var url="toFromServlet"; 
+try  
+{  
+request.onreadystatechange=getInfo;  
+request.open("POST",url,true); 
+request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+request.send();  
+}  
+catch(e)  
+{  
+alert("Unable to connect to server");  
+}  
+}  
+ 
+function getInfo(){  
+if(request.readyState==4){  
+var val=request.responseText;  
+document.getElementById('to').innerHTML+=val;
+document.getElementById('from').innerHTML+=val;  
+}  
+} 
+
+
+ function display(){
+	 
+	 var url="findTrainsServlet"; 
+	 var x=document.getElementById('to').value;
+	 	var y=document.getElementById('from').value;
+	 try  
+	 {  
+	 request.onreadystatechange=getTrains;
+	 request.open("POST",url,true); 
+	 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	 request.send("to="+x+"&from="+y);  
+	 }  
+	 catch(e)  
+	 {  
+	 alert("Unable to connect to server");  
+	 }  
+ }
+ function getTrains(){
+	 if(request.readyState==4){  
+		 var val=request.responseText;  
+		 if(val!=="-1")
+		 document.getElementById("trains").innerHTML='<option value="none" selected disabled hidden>Select train</option>'+val;
+		 else
+		 document.getElementById("op").innerHTML="<option>no trains found</option>";
+	 }
+ }
+ 
+ function collectDetails(){
+	 var to,from,train,date;
+	 var form=document.getElementById("submit");
+	 document.getElementById("submit_to").value=document.getElementById('to').value;
+	 document.getElementById("submit_from").value=document.getElementById('from').value;
+	 document.getElementById("submit_train").value=document.getElementById('trains').innerHTML;
+	 document.getElementById("submit_date").value=document.getElementById('date').value;
+	 document.getElementById("submit_train_class").value=document.getElementById('train_class').value;
+	 document.getElementById("submit_train_no").value=document.getElementById('trains').value;
+		 form.submit();
+		 
+ }
+function classes(){
+	 var url="TrainClasses"; 
+	 var x=document.getElementById("trains").value;
+	 try  
+	 {  
+	 request.onreadystatechange=getClasses;
+	 request.open("POST",url,true); 
+	 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	 request.send("train="+x);  
+	 }  
+	 catch(e)  
+	 {  
+	 alert("Unable to connect to server");  
+	 }  
+}
+function getClasses(){
+	 if(request.readyState==4){  
+	 var val=request.responseText;  
+	 document.getElementById("train_class").innerHTML=val;
+	 }
+}
+/* function fare(){
+	var url="fareCalculation"; 
+	 var x=document.getElementById("trains").value;
+	 try  
+	 {  
+	
+	 request.onreadystatechange=fareCalc;
+	 request.open("POST",url,true); 
+	 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	 request.send("to="+document.getElementById('to').value+
+			 "&from="+document.getElementById('from').value+
+			 "&train_no="+document.getElementById('trains').value+
+			 "&train_class="+document.getElementById('train_class').value+
+			 "&age1="+document.getElementById('age1').value+
+			 "&age2="+document.getElementById('age2').value+
+			 "&age3="+document.getElementById('age3').value+
+			 "&age4="+document.getElementById('age4').value+
+			 "&age1="+document.getElementById('age1').value+
+	 );  
+	 }  
+	 catch(e)  
+	 {  
+	 alert("Unable to connect to server");  
+	 }  
+}
+function fareCalc(){
+	
+} */
+ 
+</script>  
+</head>  
+<body>      
+ START: <select id="to"> <option value="none" selected disabled hidden>Select source</option></select> 
+  DESTINATION: <select id="from" onchange="display()"> <option value="none" selected disabled hidden>Select Destination</option></select>
+ <br><br>TRAINS: <select id="trains" onchange="classes()"><option id="op" value="none" selected disabled hidden>Select train</option> </select>
+  TRAIN CLASS: <select id="train_class"> </select>
+ DATE:<input type="date" id="date"><br><br>
+ <h4>Passenger Details</h4>
+ <form id="submit" action="preview.jsp" method="POST" >
+ <input type="hidden" name="fare" id="submit_fare">
+ <input type="hidden" name="to" id="submit_to">
+ <input type="hidden" name="from" id="submit_from">
+ <input type="hidden" name="train" id="submit_train">
+ <input type="hidden" name="train_no" id="submit_train_no">
+ <input type="hidden" name="train_class" id="submit_train_class">
+ <input type="hidden" name="date" id="submit_date">
+<table>
+<tr>
+<td >NAME</td>
+<td>AGE</td>
+<td>GENDER</td></tr>
+
+<td><input name="name1" type="text"></td>
+<td><input name="age1" id="age1" type="number"></td>
+<td><select name="gender1" id="gender1" ><option>male</option>
+<option>female</option></select></td></tr>
+
+<td><input name="name2" type="text"></td>
+<td><input name="age2" id="age2" type="number"></td>
+<td><select name="gender2" id="gender2"><option>male</option>
+<option>female</option></select>
+
+</td></tr>
+
+<td><input name="name3" type="text"></td>
+<td><input name="age3" id="age3" type="number"></td>
+<td><select name="gender3" id="gender3"><option>male</option>
+<option>female</option></select></td></tr>
+
+<td><input name="name4" type="text"></td>
+<td><input  name="age4" id="age4" type="number"></td>
+<td><select name="gender4" id="gender4"><option>male</option>
+<option>female</option></select></td></tr>
+
+
+<td><input name="name5" type="text"></td>
+<td><input name="age5" id="age5" type="number"></td>
+<td><select name="gender5" id="gender5"><option>male</option>
+<option>female</option></select></td></tr>
+</table>
+<button onClick="collectDetails()">NEXT</button> 
+</form>
+<p id="x"></p>
+</body>  
+</html>  
